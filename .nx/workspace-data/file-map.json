@@ -1,0 +1,150 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.2.3",
+  "deps": {
+    "tslib": "^2.3.0",
+    "@nx/eslint": "19.2.3",
+    "@nx/eslint-plugin": "19.2.3",
+    "@nx/jest": "19.2.3",
+    "@nx/js": "19.2.3",
+    "@swc-node/register": "~1.9.1",
+    "@swc/core": "~1.5.7",
+    "@swc/helpers": "~0.5.11",
+    "@types/jest": "^29.4.0",
+    "@types/node": "18.16.9",
+    "@typescript-eslint/eslint-plugin": "^7.3.0",
+    "@typescript-eslint/parser": "^7.3.0",
+    "eslint": "~8.57.0",
+    "eslint-config-prettier": "^9.0.0",
+    "jest": "^29.4.1",
+    "jest-environment-node": "^29.4.1",
+    "prettier": "^2.6.2",
+    "ts-jest": "^29.1.0",
+    "ts-node": "10.9.1",
+    "typescript": "~5.4.2",
+    "nx": "19.2.3"
+  },
+  "pathMappings": {
+    "mylib": [
+      "mylib/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "name": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  "fileMap": {
+    "projectFileMap": {
+      "mylib": [
+        {
+          "file": "mylib/.eslintrc.json",
+          "hash": "11808533155536463924"
+        },
+        {
+          "file": "mylib/README.md",
+          "hash": "7628013681923368405"
+        },
+        {
+          "file": "mylib/jest.config.ts",
+          "hash": "4952489007635354595"
+        },
+        {
+          "file": "mylib/project.json",
+          "hash": "5025267980520510400"
+        },
+        {
+          "file": "mylib/src/index.ts",
+          "hash": "2210606635595391551"
+        },
+        {
+          "file": "mylib/src/lib/mylib.spec.ts",
+          "hash": "6349306301365588664"
+        },
+        {
+          "file": "mylib/src/lib/mylib.ts",
+          "hash": "1033303555598071470"
+        },
+        {
+          "file": "mylib/tsconfig.json",
+          "hash": "18330180151193889737"
+        },
+        {
+          "file": "mylib/tsconfig.lib.json",
+          "hash": "14539327243516648733"
+        },
+        {
+          "file": "mylib/tsconfig.spec.json",
+          "hash": "17313551537729802733"
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".DS_Store",
+        "hash": "3902010132506161818"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "7663861978715868291"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "18315524891129148814"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "2110945332964774953"
+      },
+      {
+        "file": ".nx/nxw.js",
+        "hash": "11254603345854076312"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "14688272390704683536"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "3494843969422251966"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "nx",
+        "hash": "17165975525224888679"
+      },
+      {
+        "file": "nx.bat",
+        "hash": "16119536321561623970"
+      },
+      {
+        "file": "nx.json",
+        "hash": "16704845993842753801"
+      },
+      {
+        "file": "package.json",
+        "hash": "4044131407880248491"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "1092115985002038418"
+      }
+    ]
+  }
+}

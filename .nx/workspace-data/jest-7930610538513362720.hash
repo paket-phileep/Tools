@@ -1,0 +1,31 @@
+{
+  "17554557279433784140": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "mylib"
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests"
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^default",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/mylib"
+        ]
+      }
+    }
+  }
+}
