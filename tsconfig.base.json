@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@yourorg/myli9": ["myli9/src/index.ts"],
       "mylib": ["mylib/src/index.ts"]
     }
   },
