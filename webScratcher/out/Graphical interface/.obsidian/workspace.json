@@ -1,0 +1,186 @@
+{
+  "main": {
+    "id": "330d060280e67710",
+    "type": "split",
+    "children": [
+      {
+        "id": "c73abca7fa060980",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a238ebc1715b8391",
+            "type": "leaf",
+            "state": {
+              "type": "database-plugin",
+              "state": {
+                "file": "Emails.md"
+              }
+            }
+          },
+          {
+            "id": "2edce00cc1aae685",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "00df176ca310bc89",
+    "type": "split",
+    "children": [
+      {
+        "id": "f0d263acd7f83aca",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c8b61645837e5394",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8d7359a80991c391",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "1a9bc1c1093b49df",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ff9d28559de41067",
+    "type": "split",
+    "children": [
+      {
+        "id": "4a16aac2893ade1a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c5bcd8f2a0b731aa",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "70da5554f40e2871",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "0f81f5c633d1e91d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "e23a50c8a2ff35dd",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "obsidian-excalidraw-plugin:Create new drawing": false,
+      "graph:Open graph view": false,
+      "markdown-importer:Open format converter": false,
+      "dbfolder:Create a new database table": false,
+      "switcher:Open quick switcher": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "2edce00cc1aae685",
+  "lastOpenFiles": [
+    "2024-06-03.md",
+    "Folder/12345678 bain_brief_asia-pacific_private_equity_report_2017.pdf",
+    "OBSERVABILITY.md",
+    "Emails.md",
+    "excalibrain.md",
+    "Test.md",
+    "INSTRUMENTATION.md",
+    "Documents.md",
+    "Folder",
+    "*Todo.md",
+    "*Template.md",
+    "Tester.md",
+    "excalibrain 1.md",
+    "Demo",
+    "Untitled.canvas",
+    "Excalidraw/Drawing 2024-06-03 16.49.52.excalidraw.md",
+    "Untitled 1.canvas",
+    "Excalidraw/Drawing 2024-06-03 16.34.21.excalidraw.md",
+    "Excalidraw/Drawing 2024-06-03 16.34.34.excalidraw.md",
+    "Excalidraw",
+    "Excalidraw/Drawing 2024-06-03 16.17.33.excalidraw.md",
+    "Excalidraw/Drawing 2024-06-03 16.17.39.excalidraw.md",
+    "create a link.md",
+    "hi.md",
+    "hi/green.md",
+    "hi",
+    "Welcome.md",
+    "Docs.md"
+  ]
+}

@@ -1,0 +1,7 @@
+*.txt
+*.pdf*
+*.docx
+www*
+http*
+import
+.env

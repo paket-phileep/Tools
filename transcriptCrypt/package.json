@@ -1,0 +1,13 @@
+{
+  "name": "summaryai",
+  "version": "1.0.0",
+  "description": "Fine-tuning and evaluation of Llama2-7bn model for news summary with a focus on factuality. Part of Advanced NLP 2023 @ ITU Copenhagen course work. Tested and developed on Python 3.10 and Ubuntu 22, NVidia A100 GPU. See relevant links below: - [Base model](https://huggingface.co/ernlavr/llama-2-7bn-xsum-lora-adapter) - [Weights and Biases](https://wandb.ai/ernlavr/adv_nlp2023/sweeps) - [Paper](https://ernlavr.github.io/portfolio/portfolio-5/)",
+  "main": "index.js",
+  "scripts": {
+    "start": "sh init.sh",
+    "env": "echo source .venv/bin/activate",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

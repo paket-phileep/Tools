@@ -1,0 +1,16 @@
+{
+  "name": "webscratcher",
+  "version": "1.0.0",
+  "description": "<img width=\"743\" alt=\"image\" src=\"https://github.com/sullemanhossam/Webscratcher/assets/169534316/c057d4b8-a4cc-4ea6-9c3b-5ea43a73e007\">",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd app && sh menu.sh",
+    "perms": "chmod -R +x *"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^22.10.0"
+  }
+}

@@ -1,0 +1,388 @@
+#!/bin/bash
+# readablepdf
+#
+# ReadablePDF streamlines the effort of turning a not so great PDF into
+# a more easily readable PDF (or of course a pretty decent PDF into an
+# even better one). Copyright (C) 2014 Frans de Jonge.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+##############################################
+#
+# This script depends on poppler-utils, imagemagick, tesseract-ocr,
+# scantailor-universal, jbig2enc, and pdfbeads. Unfortunately only the first three
+# are available in the Debian repositories.
+# sudo apt install poppler-utils imagemagick tesseract-ocr
+#
+# For more background information and how to install jbig2enc and pdfbeads,
+# see http://fransdejonge.com/2014/10/fixing-up-scanned-pdfs-with-scan-tailor#harder-post-processing
+# Scan-Tailor Universal must be compiled from source, see:
+# https://github.com/trufanov-nok/scantailor-universal
+#
+# GNU Aspell and GNU Parallel are recommended but not required.
+# sudo apt install aspell parallel
+#
+# Aspell dictionaries tend to be called things like aspell-en, aspell-nl, etc.
+
+## Version info
+version=0.9
+version_info=$'readablepdf '${version}$'
+Copyright (C) 2014 Frans de Jonge.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.'
+
+## Helper functions and variables for command line switches.
+dependencies=$'This script depends on poppler-utils, imagemagick, tesseract-ocr, 
+scantailor-universal, jbig2enc, and pdfbeads (+ its dependencies ruby-nokogiri and ruby-inconv). Unfortunately only the first three
+are available in the Debian repositories.
+sudo apt install poppler-utils imagemagick tesseract-ocr
+
+For more background information and how to install jbig2enc and pdfbeads,
+see http://fransdejonge.com/2014/10/fixing-up-scanned-pdfs-with-scan-tailor#harder-post-processing
+Scan-Tailor Universal must be compiled from source, see:
+https://github.com/trufanov-nok/scantailor-universal
+
+GNU Aspell and GNU Parallel are recommended but not required.
+sudo apt install aspell parallel
+
+Aspell dictionaries tend to be called things like aspell-en, aspell-nl, etc.'
+usage="Usage: $0 [-a] [-r <0|90|180|270>] [FILE.pdf]"
+help=$usage'
+
+ReadablePDF streamlines the effort of turning a not so great PDF into
+a more easily readable PDF (or of course a pretty decent PDF into an
+even better one).
+
+Image-processing:
+  -a, --auto-rotate       Automatically try to determine rotation and act accordingly.
+  -r, --rotate            A number of degrees by which to rotate. Typically 90, 180 or 270.
+  -l, --language          The language for OCR. See '"'tesseract --list-langs'"$' for available
+                          languages. Combine languages like eng+nld.
+  -t, --tesseract-params  Parameters to pass to Tesseract.
+
+Miscellaneous
+  -v, --version           Display version information.
+
+Configuration file:
+A system-wide configuration file can be created in /etc/readablepdf.conf
+and a user configuration file can be created in ~/.config/readablepdf.conf.
+
+A configuration file might look like follows. Values are enclosed within
+single quotation marks:
+
+# Always enable auto-rotate
+AUTO_ROTATE='"'true'"$'
+# Set default language to English + Dutch
+TESSERACT_LANGUAGE='"'eng+nld'"$'
+
+'$dependencies
+
+echo_error() {
+	echo "Error: $1"
+	echo
+	echo_usage
+}
+
+echo_help() {
+	echo "${help}"
+	exit 1
+}
+
+echo_usage() {
+	echo "${usage}"
+	echo "Try '$0 --help' for more information."
+	exit 1
+}
+
+echo_version() {
+	echo "${version_info}"
+	exit 1
+}
+
+## Declare variables that might change through config file or command line switches.
+AUTO_ROTATE=false
+ROTATE=0
+TESSERACT_LANG="eng"
+#TESSERACT_PARAMS=${TESSERACT_LANG}
+TESSERACT_PARAMS=
+
+## Change variables through config file
+# Inspired by http://wiki.bash-hackers.org/howto/conffile
+# Both system-wide and per user conf; something along these lines.
+load_config() {
+	# Paranoid whitelist.
+	unknown=$(< "$1" grep -Evi "^(#.*|[A-Z_]*='[a-z0-9 +-]*')$")
+	if [ -n "${unknown}" ]; then
+		echo "Error in config file. Disallowed lines:"
+		echo "${unknown}"
+		exit 1
+	fi
+	source "$1"
+}
+
+c_files=( "/etc/readablepdf.cfg" "${HOME}/.config/readablepdf.conf" )
+
+for c_file in "${c_files[@]}"; do
+	if [ -r "$c_file" ]; then
+		load_config "$c_file"
+	fi
+done
+
+## Process flags
+# Thanks to http://stackoverflow.com/a/9899366
+# This shows how to handle combined short options along with
+# other long and short options. It does so by splitting them
+# apart (e.g. 'tar -xvzf ...' -> 'tar -x -v -z -f ...')
+
+while test $# -gt 0
+do
+	case $1 in
+
+	# Normal option processing
+		-h | --help)
+			# usage and help
+			echo_help
+			;;
+		-v | --version)
+			# version info
+			echo_version
+			;;
+		-l | --language)
+			# Perform a simple syntax check at the very beginning.
+			if [[ "$2" =~ ^[a-z]{3}([+]?[a-z]{3}){0,}$ ]]; then
+				TESSERACT_LANG=$2
+				shift
+			else
+				echo_error "$1 needs a valid lower case three-character language string. Combine languages like 'eng+nld'."
+			fi
+			;;
+		--tesseract-params)
+			if [ -z "$2" ]; then
+				echo_error "$1 requires parameters for Tesseract. See 'tesseract --help' for more information."
+				echo_usage
+			else
+				TESSERACT_PARAMS=$2
+				shift
+			fi
+			;;
+		-r | --rotate)
+			case $2 in
+				''|*[!0-9-.]*)
+					# Not a number.
+					echo_error "$1 needs a number of degrees."
+					;;
+				*)
+					# It's a number.
+					ROTATE=$2
+					shift
+					;;
+			esac
+			;;
+		-a | --auto-rotate)
+			AUTO_ROTATE=true
+			;;
+	# ...
+
+	# Special cases
+		--)
+			break
+			;;
+		--*)
+			# error unknown (long) option $1
+			echo_error "unknown (long) option $1"
+			;;
+		-?)
+			# error unknown (short) option $1
+			echo_error "unknown (short) option $1"
+			;;
+
+	# FUN STUFF HERE:
+	# Split apart combined short options
+		-*)
+			split=$1
+			shift
+			set -- "$(echo "$split" | cut -c 2- | sed 's/./-& /g')" "$@"
+			continue
+			;;
+
+	# Done with options
+		*)
+			break
+			;;
+	esac
+
+	# for testing purposes:
+	echo "testing $1"
+
+	shift
+done
+
+# Check that rotate and automatic-rotate aren't given together?
+
+# Add -l option to parameters if there's no conflict.
+if [[ "${TESSERACT_PARAMS}" != *-l* ]]; then
+	TESSERACT_PARAMS="-l ${TESSERACT_LANG} ${TESSERACT_PARAMS}"
+fi
+
+# If no file given, display usage info.
+#if [ -z "$1" ] || [ -z "${p}" ]; then
+if [ -z "$1" ]; then
+	echo_error "Specify a file to process."
+	echo_usage
+fi
+
+BASENAME=${*%.pdf}
+
+# It would seem that at some point in its internal processing, pdfbeads has issues with spaces.
+# Let's strip them and perhaps some other special characters so as still to provide
+# meaningful working directory and file names.
+BASENAME_SAFE=$(echo "${BASENAME}" | tr ' ' '_') # Replace all spaces with underscores.
+BASENAME_SAFE=$(echo "${BASENAME_SAFE}" | tr -d ".()\"'") # Get rid of all periods, parentheses, double quotes and single quotes.
+#BASENAME_SAFE=$(echo "${BASENAME_SAFE}" | tr -cd 'A-Za-z0-9_-') # Strip other potentially harmful chars just in case?
+
+SCRIPTNAME=$(basename "$0" .sh)
+TMP_DIR=${SCRIPTNAME}-${BASENAME_SAFE}
+
+
+# If project file exists, change directory and assume everything's in order.
+# Else do the preprocessing and initiation of a new project.
+if [ -f "${TMP_DIR}/${BASENAME_SAFE}.ScanTailor" ]; then
+	echo "File ${TMP_DIR}/${BASENAME_SAFE}.ScanTailor exists."
+	cd "${TMP_DIR}" || exit
+else
+	echo "File ${TMP_DIR}/${BASENAME_SAFE}.ScanTailor does not exist."
+	
+	# Let's get started.
+	if [ ! -d "${TMP_DIR}" ]; then
+		mkdir "${TMP_DIR}"
+	fi
+	cd "${TMP_DIR}" || exit
+	
+	# Only output PNG to prevent any potential further quality loss.
+	pdfimages -png "../${BASENAME}.pdf" "${BASENAME_SAFE}"
+	
+	# This is basically what happens in https://github.com/virantha/pypdfocr as well
+	# get the x-dpi; no logic for different X and Y DPI or different DPI within PDF file
+	# y-dpi would be pdfimages -list out.pdf | sed -n 3p | awk '{print $14}'
+	DPI=$(pdfimages -list "../${BASENAME}.pdf" | sed -n 3p | awk '{print $13}')
+	
+#<<'end_long_comment'
+	if [ "${AUTO_ROTATE}" = true ]; then
+		# TODO Skip all this based on a rotation command-line flag!
+		# Adapted from http://stackoverflow.com/a/9778277
+		# Scan Tailor says it can't automatically figure out the rotation.
+		# I'm not a programmer, but I think I can do well enough by (ab)using OCR. :)
+		file="${BASENAME_SAFE}-000.png"
+
+		TMP="/tmp/${TMP_DIR}-rotation-calc"
+		mkdir "${TMP}"
+
+		# Make copies in all four orientations (the src file is 0; copy it to make
+		# things less confusing)
+		north_file="${TMP}/0"
+		east_file="${TMP}/90"
+		south_file="${TMP}/180"
+		west_file="${TMP}/270"
+
+		cp "$file" "$north_file"
+		convert -rotate 90 "$file" "$east_file"
+		convert -rotate 180 "$file" "$south_file"
+		convert -rotate 270 "$file" "$west_file"
+
+		# OCR each (just append ".txt" to the path/name of the image)
+		north_text="$north_file.txt"
+		east_text="$east_file.txt"
+		south_text="$south_file.txt"
+		west_text="$west_file.txt"
+
+		# tesseract appends .txt automatically
+		tesseract "$north_file" "$north_file"
+		tesseract "$east_file" "$east_file"
+		tesseract "$south_file" "$south_file"
+		tesseract "$west_file" "$west_file"
+
+		# Get the word count for each txt file (least 'words' == least whitespace junk
+		# resulting from vertical lines of text that should be horizontal.)
+		wc_table="$TMP/wc_table"
+		echo "$(wc -w "${north_text}") ${north_file}" > "$wc_table"
+		echo "$(wc -w "${east_text}") ${east_file}" >> "$wc_table"
+		echo "$(wc -w "${south_text}") ${south_file}" >> "$wc_table"
+		echo "$(wc -w "${west_text}") ${west_file}" >> "$wc_table"
+
+		# Spellcheck. The lowest number of misspelled words is most likely the 
+		# correct orientation.
+		misspelled_words_table="$TMP/misspelled_words_table"
+		while read record; do
+			txt=$(echo "$record" | awk '{ print $2 }')
+			# This is harder to automate away, pretend we only deal with English and Dutch for now.
+			misspelled_word_count=$(< "${txt}" aspell -l en list | aspell -l nl list | wc -w)
+			echo "$misspelled_word_count $record" >> "$misspelled_words_table"
+		done < "$wc_table"
+
+		# Do the sort, overwrite the input file, save out the text
+		winner=$(sort -n "$misspelled_words_table" | head -1)
+		rotated_file=$(echo "${winner}" | awk '{ print $4 }')
+
+		ROTATE=$(basename "${rotated_file}")
+
+		echo "Auto-rotating ${ROTATE} degrees"
+
+		# Clean up.
+		if [ -d "${TMP}" ]; then
+			rm -r "${TMP}"
+		fi
+		# TODO end skip
+	fi
+	
+	if [[ ${ROTATE} -ne 0 ]]; then
+		mogrify -rotate "${ROTATE}" "${BASENAME_SAFE}-*.png"
+	fi
+#end_long_comment
+	
+	# consider --color-mode=mixed --despeckle=cautious
+	scantailor-universal-cli --dpi="${DPI}" --margins=5 --output-project="${BASENAME_SAFE}.ScanTailor" ./*.png ./
+fi
+
+while true; do
+	read -p "Please ensure automated detection proceeded correctly by opening the project file ${TMP_DIR}/${BASENAME_SAFE}.ScanTailor in Scan Tailor. Enter [Y] to continue now and [N] to abort. If you restart the script, it'll continue from this point unless you delete the directory ${TMP_DIR}. " yn
+	case $yn in
+		[Yy]* ) break;;
+		[Nn]* ) exit;;
+		* ) echo "Please answer yes or no.";;
+	esac
+done
+
+
+echo "Estimating CPU-Threads"
+# Estimate CPU Cores (see pdfsandwich code for reference)
+CPU_THREADS=$(cat /proc/cpuinfo | grep processor | awk '{a++} END {print a}')
+OMP_THREAD_LIMIT=$CPU_THREADS
+MAX_JOBS=$(expr $CPU_THREADS / 4)
+# tesseract only uses 4 threads
+
+echo "Using up to $CPU_THREADS threads."
+
+# Use GNU Parallel to speed things up if it exists.
+
+if command -v parallel >/dev/null; then
+	parallel -P ${MAX_JOBS} tesseract "{}" "{.}" "${TESSERACT_PARAMS}" hocr ::: *.tif
+else
+	for i in ./*.tif; do tesseract "$i" "$(basename "$i")" "${TESSERACT_PARAMS}" hocr; done;
+fi
+
+# pdfbeads doesn't play nice with filenames with spaces. There's nothing we can do
+# about that here, but that's ${BASENAME_SAFE} is generated up at the beginning.
+# 
+# Also pdfbeads ./*.tif > "${BASENAME_SAFE}.pdf" doesn't work,
+# so you're in trouble if your PDF's name starts with "-".
+# See http://www.dwheeler.com/essays/filenames-in-shell.html#prefixglobs
+pdfbeads *.tif > "${BASENAME_SAFE}.pdf"
+
+#OUTPUT_BASENAME=${BASENAME}-output@DPI${DPI}
+mv "${BASENAME_SAFE}.pdf" ../"${BASENAME}-readable.pdf"

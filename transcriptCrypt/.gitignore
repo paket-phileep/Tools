@@ -1,0 +1,7 @@
+.venv
+*.pdf
+*.srt
+*.txt
+*.yml
+subtitles
+transcripts
