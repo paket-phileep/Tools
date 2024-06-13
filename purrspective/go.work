@@ -1,0 +1,10 @@
+go 1.22
+
+use (
+	./apps/cmd
+	./libs/data-access
+)
+
+
+replace github.com/tidwall/btree v1.1.0 => github.com/tidwall/btree v1.1.1-0.20220220161908-7bec22d8e3fa
+replace github.com/samber/lo v1.3.1 => github.com/samber/lo v1.3.2-0.20220305174447-4edabde35217

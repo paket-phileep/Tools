@@ -1,0 +1,90 @@
+{
+  "nodes": {
+    "data-access": {
+      "name": "data-access",
+      "type": "lib",
+      "data": {
+        "root": "libs/data-access",
+        "name": "data-access",
+        "targets": {
+          "test": {
+            "executor": "@nx-go/nx-go:test",
+            "options": {},
+            "configurations": {}
+          },
+          "lint": {
+            "executor": "@nx-go/nx-go:lint",
+            "options": {},
+            "configurations": {}
+          },
+          "tidy": {
+            "executor": "@nx-go/nx-go:tidy",
+            "options": {},
+            "configurations": {}
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/data-access",
+        "tags": [
+          "database",
+          "data"
+        ],
+        "implicitDependencies": []
+      }
+    },
+    "cmd": {
+      "name": "cmd",
+      "type": "app",
+      "data": {
+        "root": "apps/cmd",
+        "name": "cmd",
+        "targets": {
+          "build": {
+            "executor": "@nx-go/nx-go:build",
+            "options": {
+              "main": "apps/cmd/main.go"
+            },
+            "configurations": {}
+          },
+          "serve": {
+            "executor": "@nx-go/nx-go:serve",
+            "options": {
+              "main": "apps/cmd/main.go"
+            },
+            "configurations": {}
+          },
+          "test": {
+            "executor": "@nx-go/nx-go:test",
+            "options": {},
+            "configurations": {}
+          },
+          "lint": {
+            "executor": "@nx-go/nx-go:lint",
+            "options": {},
+            "configurations": {}
+          },
+          "tidy": {
+            "executor": "@nx-go/nx-go:tidy",
+            "options": {},
+            "configurations": {}
+          }
+        },
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/cmd",
+        "tags": [
+          "database",
+          "data"
+        ],
+        "implicitDependencies": []
+      }
+    }
+  },
+  "externalNodes": {},
+  "dependencies": {
+    "data-access": [],
+    "cmd": []
+  },
+  "version": "6.0"
+}

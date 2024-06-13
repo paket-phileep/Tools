@@ -1,0 +1,109 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.2.3",
+  "deps": {
+    "nx": "19.2.3",
+    "@nx-go/nx-go": "3.1.0"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [
+    {
+      "name": "@nx-go/nx-go",
+      "version": "3.1.0"
+    }
+  ],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".DS_Store",
+        "hash": "10850102109492933159"
+      },
+      {
+        "file": "note",
+        "hash": "14574993574338401366"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "2110945332964774953"
+      },
+      {
+        "file": "README.md",
+        "hash": "17406024794277719037"
+      },
+      {
+        "file": ".nx/nxw.js",
+        "hash": "11254603345854076312"
+      },
+      {
+        "file": "nx.bat",
+        "hash": "16119536321561623970"
+      },
+      {
+        "file": "go.work.sum",
+        "hash": "4576798810611687701"
+      },
+      {
+        "file": "generate.application.sh",
+        "hash": "14795835523348016840"
+      },
+      {
+        "file": "nx",
+        "hash": "17165975525224888679"
+      },
+      {
+        "file": "nx.json",
+        "hash": "10550631249131262778"
+      },
+      {
+        "file": "package.json",
+        "hash": "16222021580400413169"
+      },
+      {
+        "file": "generate.library.sh",
+        "hash": "16222681138005981542"
+      },
+      {
+        "file": "go.work",
+        "hash": "676046970578728429"
+      }
+    ],
+    "projectFileMap": {
+      "cmd": [
+        {
+          "file": "apps/cmd/go.mod",
+          "hash": "9478868090559759725"
+        },
+        {
+          "file": "apps/cmd/main.go",
+          "hash": "2737203305283220379"
+        },
+        {
+          "file": "apps/cmd/main_test.go",
+          "hash": "12780176229736183515"
+        },
+        {
+          "file": "apps/cmd/project.json",
+          "hash": "6301938175948260916"
+        }
+      ],
+      "data-access": [
+        {
+          "file": "libs/data-access/data-access.go",
+          "hash": "9015909039859796585"
+        },
+        {
+          "file": "libs/data-access/data-access_test.go",
+          "hash": "16907182199770213162"
+        },
+        {
+          "file": "libs/data-access/go.mod",
+          "hash": "5424323656990681978"
+        },
+        {
+          "file": "libs/data-access/project.json",
+          "hash": "16214162914815507220"
+        }
+      ]
+    }
+  }
+}
