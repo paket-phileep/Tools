@@ -1,0 +1,12 @@
+should return 
+
+instances 
+- errors
+- logs
+- status
+- time elapsed 
+
+optional 
+
+- gui 
+

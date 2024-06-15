@@ -1,0 +1,15 @@
+upload files to github repos / gist or npm 
+
+
+gists can have the hit url and the document it has found 
+
+repos can have information on the scans
+
+npm has a large limit i suppose this can store the recipts of the urls scanned we can use jsdeliver for this 
+
+
+using js deliver can show the econtents of a npm or repo 
+
+
+users should be able to discard paths they dont like 
+like samsung/......
